@@ -1,43 +1,85 @@
+#include "bloomFilter.h"
+#include <string>
+#include <cmath>
+#include <math.h>
+#define prime 2147483647
+BloomFilter::BloomFilter( float p , int m, float c , float d ){
+    size = Size(p, m, c);
+    numHash = numHashFunctions(size, m, d);
+    bloomFilter = new int[m];
+}
 
-include<math.h>
-
-// Main API o f t h e bloom f i l t e r
-// p := p r o b a b i l i t y o f a f a l s e p o s i t i v e
-// m := e x p e c t e d number o f s t r i n g s t o be i n s e r t e d
-// c := s c a l e f a c t o r o f bloom f i l t e r s i z e
-// d := s c a l e f a c t o r o f number o f hash f u n c t i o n s
-BloomFilter( int p , int m, f l o a t c , f l o a t d ) ;
-// I n s e r t a s t r i n g i n t o t h e bloom f i l t e r .
 void BloomFilter::insert(std::string element ){
-
-    
-}
-// D el e t e an elemen t from t h e bloom f i l t e r .
-// Th is w i l l use an a u x i l i a r y hash t a b l e . d e f i n e d bel ow .
-void bloomFilter: : remove ( s t d : : s t r i n g elemen t ) ;
-// Return t r u e i f t h e elemen t i s in t h e bloom f i l t e r ,
-// o t h e r w i s e r e t u r n f a l s e .
-bool BloomFilter: : f i n d ( s t d : : s t r i n g elemen t ) ;
-// Compute t h e bloom f i l t e r s i z e b a se d on t h e f a l s e p o s i t i v e p r o b a b i l i t y d e s i r e d ,
-// and t h e e x p e c t e d number o f s t r i n g s t o be i n s e r t e d .
-// S c al e t h e computed s i z e by ’ c ’ ( f o r e x p e r im e n t al p u r p o se s ) .
-// p := p r o b a b i l i t y o f a f a l s e p o s i t i v e
-// m := e x p e c t e d number o f s t r i n g s t o be i n s e r t e d
-// c := s c a l e f a c t o r o f bloom f i l t e r s i z e
-int BloomFilter::Size( int p , int m, int c ){
-return (m*log(p))/ (log(2)*log(2));
+    unsigned int intElem = strToInt(element);
+    int tmp = 0;
+    for(int i = 0; i<numHash; i++){
+      tmp = hash(intElem, i);
+      this->bloomFilter[tmp] = 1;
+    }
 }
 
-int bloomFilter::numHashFunctions ( int n , int m, int d ){
-return ((n/m) * log(2));
+void BloomFilter::remove(std::string element){
+
 }
 
-
-int BloomFilter::hash(unsigned int element , int inde x ) ;
-
+bool BloomFilter::find(std::string element){
+    bool found = true;
+    unsigned int intElem = strToInt(element);
+    int tmp = 0;
+    for(int i = 0; i<numHash; i++){
+      tmp = hash(intElem, i);
+      if(this->bloomFilter[tmp] != 1)
+        found = false;
+    }
+    return found;
+}
+int BloomFilter::Size(float p , int m, float c){
+    double tmp = m*log(p);
+    double constant = log(2)*log(2);
+    tmp = -tmp/constant;
+    tmp = tmp * c;
+    return (int)(tmp);
+}
+int BloomFilter::numHashFunctions(int n , int m, float d){
+    double tmp = n* log(2);
+    tmp = tmp/m;
+    return (int)round(tmp);
+}
+int BloomFilter::hash(unsigned int element , int index ){
+    double tmp, location = 0;
+    unsigned int ai, bi = 0;
+    srand(index);
+    tmp = rand()*(RAND_MAX) + rand() +1;
+    ai = fmod(tmp, prime);        
+    tmp = rand()*(RAND_MAX) + rand();
+    bi = fmod(tmp, prime);
+    location = (ai*element) + bi;
+    location = fmod(location, prime);
+    location = fmod(location, size);
+    return (int)location;
+}
 // String to integer conversion .
 // Needed for running the elements on the above hash function .
-unsigned int s t r T o I n t ( s t d : : s t r i n g elemen t ) ;
-
+unsigned int BloomFilter::strToInt( std::string element ){
+    unsigned int total, tmp = 0;
+    double expo = 0;
+    for(int i = 0; i<element.length(); i++){
+        /*expo = std::pow(31,i);
+        expo = fmod(expo, prime);
+        expo = (unsigned int)element[i] * expo;
+        expo = fmod(expo, prime);
+        total = (total + (unsigned int)expo) % prime;*/
+        expo = std::pow(31,i);
+        expo = fmod(expo, prime);
+        expo = (unsigned int)element[i] * expo;
+        expo = fmod(expo, prime);
+        expo = total + expo;
+        expo = fmod(expo, prime);
+        total = (unsigned int)expo;
+    }
+    return total;
+}
 // Testing
-void Bl o omFil t e r : : p ri n t ( ) ;
+void BloomFilter::print(){
+
+}
