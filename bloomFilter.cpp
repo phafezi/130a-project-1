@@ -1,25 +1,29 @@
 #include "bloomFilter.h"
-#include <string>
-#include <cmath>
-#include <math.h>
+
 #define prime 2147483647
 BloomFilter::BloomFilter( float p , int m, float c , float d ){
     size = Size(p, m, c);
     numHash = numHashFunctions(size, m, d);
-    bloomFilter = new int[m];
+    std::cout << "\n size: " << size << "\n numHash " << numHash << "\n";
+    bloomFilter.resize(size, false);
+    
+}
+BloomFilter::~BloomFilter(){
+
 }
 
 void BloomFilter::insert(std::string element ){
+    //table.remove(element);
     unsigned int intElem = strToInt(element);
     int tmp = 0;
     for(int i = 0; i<numHash; i++){
       tmp = hash(intElem, i);
-      this->bloomFilter[tmp] = 1;
+      bloomFilter[tmp] = true;
     }
 }
 
 void BloomFilter::remove(std::string element){
-
+    //table.insert(element);
 }
 
 bool BloomFilter::find(std::string element){
@@ -28,9 +32,11 @@ bool BloomFilter::find(std::string element){
     int tmp = 0;
     for(int i = 0; i<numHash; i++){
       tmp = hash(intElem, i);
-      if(this->bloomFilter[tmp] != 1)
+      if(bloomFilter[tmp] == false)
         found = false;
     }
+    //if(table.find(element))
+        //found = false;
     return found;
 }
 int BloomFilter::Size(float p , int m, float c){
@@ -60,7 +66,7 @@ int BloomFilter::hash(unsigned int element , int index ){
 }
 // String to integer conversion .
 // Needed for running the elements on the above hash function .
-unsigned int BloomFilter::strToInt( std::string element ){
+unsigned int BloomFilter::strToInt(std::string element){
     unsigned int total, tmp = 0;
     double expo = 0;
     for(int i = 0; i<element.length(); i++){

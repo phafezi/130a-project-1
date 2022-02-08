@@ -1,5 +1,10 @@
 #ifndef BLOOMFILTER_H
 #define BLOOMFILTER_H
+#include <string>
+#include <cmath>
+#include <math.h>
+#include <vector>
+#include "auxiliaryhashtable.h"
 class BloomFilter {
 
  public:
@@ -10,7 +15,6 @@ class BloomFilter {
    bool find (std::string element);
    int bloomFilterSize(int p , int m, int c);
    int numHashFunctions (int n , int m, float d);
-   unsigned int strToInt(std::string element) ;
    void print();
  private:
    int Size(float p , int m, float c);
@@ -18,9 +22,10 @@ class BloomFilter {
    int hash (unsigned int element , int index);
    unsigned int strToInt(std::string element) ;
     
-   int* bloomFilter;
+   std::vector<bool> bloomFilter;
    int size;
    int numHash;
+   //AuxiliaryHashTable table(8191);
     
     
 };
