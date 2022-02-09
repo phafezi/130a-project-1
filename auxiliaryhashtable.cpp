@@ -5,9 +5,24 @@ AuxiliaryHashTable::AuxiliaryHashTable(int q){
     size = q;
     hashTable = new Node*[q];
     for(int i=0; i<q; i++){
-        hashTable[i] ->next= new Node;
+        hashTable[i] = NULL;
     }
 
+}
+
+AuxiliaryHashTable::~AuxiliaryHashTable(){
+    
+    for(int i=0; i<size; i++){
+        Node *n = hashTable[i];
+        Node *tmp = NULL;
+        while (n != NULL)
+        {
+            tmp = n->next; 
+            delete n; 
+            n = tmp;
+        }
+    }
+    delete hashTable;
 }
 
 int AuxiliaryHashTable::strToInt( std::string element ){
@@ -28,22 +43,24 @@ int AuxiliaryHashTable::strToInt( std::string element ){
 void AuxiliaryHashTable::insert (std::string element){
     
     int index = strToInt(element);
+    index = index % size;
     if (hashTable[index] == NULL) { // empty list
-        /*hashTable[index] == new Node;
+        hashTable[index] = new Node;
         hashTable[index]->info = element;
-        hashTable[index]->next = NULL;*/
+        hashTable[index]->next = NULL;
     }
     else {
-        /*Node *n = hashTable[index];
-        while (n->next != 0) 
+        Node *n = hashTable[index];
+        while (n->next != NULL) 
             n = n->next;
         n->next = new Node;
         n->next->info = element;
-        n->next->next = 0;*/
+        n->next->next = NULL;
     }
 }
 void AuxiliaryHashTable::remove (std::string element){
     int index = strToInt(element);
+    index = index % size;
     if (hashTable[index]->info == element) { // empty list
         Node *tmp = hashTable[index]->next;
         delete hashTable[index];

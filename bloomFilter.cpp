@@ -49,6 +49,7 @@ int BloomFilter::Size(float p , int m, float c){
 int BloomFilter::numHashFunctions(int n , int m, float d){
     double tmp = n* log(2);
     tmp = tmp/m;
+    tmp = tmp*d;
     return (int)round(tmp);
 }
 int BloomFilter::hash(unsigned int element , int index ){
@@ -87,5 +88,13 @@ unsigned int BloomFilter::strToInt(std::string element){
 }
 // Testing
 void BloomFilter::print(){
-
+    for (int i = 0; i < size; i++)
+    {
+        if(bloomFilter[i]==true){
+            std::cout<< 1 << " ";
+        } else{
+            std::cout<< 0 << " ";
+        }
+    }
+    
 }

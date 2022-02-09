@@ -8,6 +8,7 @@
 class AuxiliaryHashTable {
 public:
     AuxiliaryHashTable (int q);
+    ~AuxiliaryHashTable();
     void insert (std::string element);
     void remove (std::string element);
     bool find (std::string element);
@@ -20,7 +21,7 @@ private:
         Node *next;
     };
 
-    Node** hashTable;
+    Node** hashTable = nullptr;
     int size;
 };
 

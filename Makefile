@@ -1,15 +1,15 @@
 # Makefile
 CXX_FLAG = --std=c++17 -g
 
-all: testHash main
+all: testHash PA1
 
 
 
-main: main.o bloomFilter.o auxiliaryhashtable.o
-	g++ $(CXX_FLAG) -o main main.o bloomFilter.o auxiliaryhashtable.o
+PA1: PA1.o bloomFilter.o auxiliaryhashtable.o
+	g++ $(CXX_FLAG) -o PA1 PA1.o bloomFilter.o auxiliaryhashtable.o
 
-main.o: main.cpp
-	g++ -c $(CXX_FLAG) main.cpp
+PA1.o: PA1.cpp
+	g++ -c $(CXX_FLAG) PA1.cpp
 
 bloomFilter.o: bloomFilter.cpp
 	g++ -c $(CXX_FLAG) bloomFilter.cpp
@@ -27,4 +27,4 @@ auxiliaryhashtable.o: auxiliaryhashtable.cpp
 	g++ -c $(CXX_FLAG) auxiliaryhashtable.cpp
 
 clean:
-	rm -f testHash *.o
+	rm -f PA1 testHash *.o
